@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Infrastructure.RentalCar
+namespace Infrastructure.RentalCar.Persistance
 {
     public class RentalCarRepository : IRentalCarRepository, IRentalCarUseCase
     {

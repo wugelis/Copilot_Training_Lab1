@@ -1,17 +1,13 @@
 using Application.RentalCar;
 using Application.RentalCar.port.In;
 using Application.RentalCar.port.Out;
+using EasyArchitectCore.Core;
+using EasyArchitectV2Lab1.AuthExtensions1.Extensions;
 using EasyArchitectV2Lab1.AuthExtensions1.Models;
 using EasyArchitectV2Lab1.AuthExtensions1.Services;
 using EasyArchitectV2Lab1.Configuration1;
 using EasyArchitectV2Lab1.JWTMiddleware1;
-using Infrastructure.RentalCar;
 using Infrastructure.RentalCar.Persistance;
-
-
-
-//using Infrastructure.RentalCars;
-//using Infrastructure.RentalCars.Persistance;
 using Microsoft.AspNetCore.Authentication.Cookies;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -55,6 +51,7 @@ builder.Services.AddScoped<RentalCarRepository>();
 builder.Services.AddScoped<IRentalCarRepository, RentalCarRepository>(service => service.GetRequiredService<RentalCarRepository>());
 builder.Services.AddScoped<IRentalCarUseCase, RentalCarRepository>(service => service.GetRequiredService<RentalCarRepository>());
 builder.Services.AddScoped<RentalCarSerAppServices>();
+builder.Services.AddScoped<IUriExtensions, UriExtensions>();
 
 var app = builder.Build();
 

@@ -1,4 +1,6 @@
 ﻿using Application.RentalCar.port.In;
+using Domain.RentalCar;
+using EasyArchitectV2Lab1.ApiControllerBase.ApiLog.Filters;
 using EasyArchitectV2Lab1.ApiControllerBase1;
 using EasyArchitectV2Lab1.AuthExtensions1.Filters;
 using EasyArchitectV2Lab1.AuthExtensions1.Services;
@@ -33,7 +35,7 @@ namespace Web.Lab20240823.Controllers
         [HttpGet]
         [Route("GetPersons")]
         //[ApiLogException]
-        //[ApiLogonInfo]
+        [ApiLogonInfo]
         public async Task<IEnumerable<Person>> GetPersonsAsync()
         {
             return await Task.FromResult(new Person[]
@@ -44,6 +46,17 @@ namespace Web.Lab20240823.Controllers
                     Name = "Gelis Wu"
                 }
             });
+        }
+        /// <summary>
+        /// 取得所有可資用車輛
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        [Route("GetAllCars")]
+        [ApiLogonInfo]
+        public async Task<IEnumerable<IVehicle>> GetAllCarsAsync()
+        {
+            return await Task.FromResult(_rentalCarUseCase.GetAllCars());
         }
 
         //[HttpPost]

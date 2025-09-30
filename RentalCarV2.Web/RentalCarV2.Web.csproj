@@ -13,17 +13,25 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="NLog" Version="4.7.13" />
+    <PackageReference Include="NLog.Config" Version="4.7.13" />
+    <PackageReference Include="NLog.Schema" Version="4.7.13" />
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\AOP.ApiControllerBase.ApiLog1\AOP.ApiControllerBase.ApiLog1.csproj" />
     <ProjectReference Include="..\Application.RentalCar\Application.RentalCar.csproj" />
     <ProjectReference Include="..\EasyArchitectV2Lab1.ApiControllerBase1\EasyArchitectV2Lab1.ApiControllerBase1.csproj" />
+    <ProjectReference Include="..\EasyArchitectV2Lab1.AuthExtensions1.Extensions\EasyArchitectV2Lab1.AuthExtensions1.Extensions.csproj" />
     <ProjectReference Include="..\EasyArchitectV2Lab1.JWTMiddleware1\EasyArchitectV2Lab1.JWTMiddleware1.csproj" />
     <ProjectReference Include="..\Infrastructure.RentalCar\Infrastructure.RentalCar.csproj" />
   </ItemGroup>
 
   <ItemGroup>
     <Content Update="appsettings.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Update="NLogOutSide.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
