@@ -37,6 +37,10 @@ namespace Domain.RentalCar
         /// 排氣量
         /// </summary>
         string CC { get; set; }
+        /// <summary>
+        /// 車型名稱
+        /// </summary>
+        string CarModelName { get; set; }
     }
     /// <summary>
     /// 車輛類型

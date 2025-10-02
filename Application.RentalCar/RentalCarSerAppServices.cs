@@ -28,9 +28,9 @@ namespace Application.RentalCar
         /// 取得所有可租車輛
         /// </summary>
         /// <returns>車輛清單</returns>
-        public IEnumerable<Car>? GetAllCars()
+        public IEnumerable<IVehicle>? GetAllCars()
         {
-            return _rentalCarUseCase.GetAllCars() as IEnumerable<Car>;
+            return _rentalCarUseCase.GetAllCars();
         }
 
         /// <summary>
