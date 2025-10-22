@@ -1,4 +1,5 @@
-﻿using Application.RentalCar.port.In;
+﻿using Application.RentalCar;
+using Application.RentalCar.port.In;
 using Domain.RentalCar;
 using EasyArchitectV2Lab1.ApiControllerBase.ApiLog.Filters;
 using EasyArchitectV2Lab1.ApiControllerBase1;
@@ -19,6 +20,7 @@ namespace Web.Lab20240823.Controllers
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IUserService _userService;
         private readonly IRentalCarUseCase _rentalCarUseCase;
+        private readonly RentalCarSerAppServices _rentalCarSerAppServices;
 
         /// <summary>
         /// 初始化租車服務 API 控制器
@@ -26,15 +28,18 @@ namespace Web.Lab20240823.Controllers
         /// <param name="httpContextAccessor">HTTP 上下文存取器，用於存取當前請求的上下文資訊</param>
         /// <param name="userService">使用者服務，用於處理使用者身分驗證和授權</param>
         /// <param name="rentalCarUseCase">租車使用案例服務，提供租車業務邏輯</param>
+        /// <param name="rentalCarSerAppServices">租車應用程式服務，處理租車相關業務流程</param>
         public RentalCarApiController(
             IHttpContextAccessor httpContextAccessor,
             IUserService userService,
-            IRentalCarUseCase rentalCarUseCase)
+            IRentalCarUseCase rentalCarUseCase,
+            RentalCarSerAppServices rentalCarSerAppServices)
             : base(httpContextAccessor, userService)
         {
             _httpContextAccessor = httpContextAccessor;
             _userService = userService;
             _rentalCarUseCase = rentalCarUseCase;
+            _rentalCarSerAppServices = rentalCarSerAppServices;
         }
 
         /// <summary>
@@ -65,26 +70,9 @@ namespace Web.Lab20240823.Controllers
         }
 
         /// <summary>
-        /// 取得所有可租用的車輛清單
+        /// 取回目前所有可出租的車輛
         /// </summary>
-        /// <returns>回傳所有可租用車輛的集合，包含車輛類型、車種、排氣量等資訊</returns>
-        /// <response code="200">成功回傳車輛清單</response>
-        /// <response code="500">伺服器內部錯誤</response>
-        /// <remarks>
-        /// 此 API 不需要身分驗證即可存取
-        /// 回傳的車輛清單包含所有可供租用的車輛資訊
-        /// 
-        /// 範例回應:
-        /// ```json
-        /// [
-        ///   {
-        ///     "model": "Toyota",
-        ///     "cc": "2000",
-        ///     "carModelName": "Camry"
-        ///   }
-        /// ]
-        /// ```
-        /// </remarks>
+        /// <returns></returns>
         [HttpGet]
         [Route("GetAllCars")]
         [ApiLogonInfo]
@@ -93,30 +81,47 @@ namespace Web.Lab20240823.Controllers
             return await Task.FromResult(_rentalCarUseCase.GetAllCars());
         }
 
-        ///// <summary>
-        ///// 執行車輛租用作業
-        ///// </summary>
-        ///// <param name="rentalCarDto">租車資料傳輸物件，包含租車所需的資訊</param>
-        ///// <returns>回傳租車是否成功的布林值，true 表示成功，false 表示失敗，null 表示發生錯誤</returns>
-        ///// <response code="200">租車作業執行成功</response>
-        ///// <response code="400">請求資料不正確</response>
-        ///// <response code="500">伺服器內部錯誤</response>
-        ///// <remarks>
-        ///// 此方法目前已被註解，待實作完整的租車功能後啟用
-        ///// 實作時需要考慮：
-        ///// - 車輛可用性檢查
-        ///// - 租用期間驗證
-        ///// - 租金計算
-        ///// - 交易處理
-        ///// </remarks>
-        //[HttpPost]
-        //[Route("ToRentalCar")]
-        //public async Task<bool?> ToRentalCarAsync(RentalCarDto rentalCarDto)
-        //{
-        //    Car car = new Car(ModelType.Toyota);
+        /// <summary>
+        /// 進行車輛租用作業
+        /// </summary>
+        /// <param name="car">要租用的車輛資訊</param>
+        /// <returns>租用結果，成功回傳 true，失敗回傳 false</returns>
+        /// <response code="200">成功租用車輛</response>
+        /// <response code="400">租用失敗，可能是車輛不可用或資料有誤</response>
+        /// <response code="401">未授權，需要先登入</response>
+        /// <remarks>
+        /// 透過應用程式服務層處理租車業務邏輯
+        /// 此方法會呼叫 RentalCarSerAppServices 的 ToRentCar 方法
+        /// </remarks>
+        [NeedAuthorize]
+        [HttpPost]
+        [Route("ToRentalCar")]
+        [ApiLogonInfo]
+        public async Task<IActionResult> ToRentalCarAsync([FromBody] IVehicle car)
+        {
+            try
+            {
+                if (car == null)
+                {
+                    return BadRequest("車輛資訊不能為空");
+                }
 
-        //    return await Task.FromResult( _rentalCarUseCase.ToRentCar(car));
-        //}
+                bool result = await Task.FromResult(_rentalCarSerAppServices.ToRentCar(car));
+
+                if (result)
+                {
+                    return Ok(new { Success = true, Message = "車輛租用成功" });
+                }
+                else
+                {
+                    return BadRequest(new { Success = false, Message = "車輛租用失敗" });
+                }
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { Success = false, Message = $"系統錯誤: {ex.Message}" });
+            }
+        }
     }
 
     /// <summary>
