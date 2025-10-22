@@ -11,12 +11,17 @@ namespace Domain.RentalCar
     /// </summary>
     public class RV : IVehicle
     {
-        private ModelType _modelName = ModelType.Lexus;
+        private ModelType _modelName;// = ModelType.Lexus;
         private string _cc;
         private string _carModelName;
 
         public ModelType Model { get => _modelName; set => _modelName = value; }
         public string CC { get => _cc; set => _cc = value; }
+
+        public RV(ModelType modelName)
+        {
+            _modelName = modelName;
+        }
         /// <summary>
         /// 車型名稱
         /// </summary>

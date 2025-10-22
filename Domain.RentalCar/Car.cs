@@ -19,9 +19,9 @@ namespace Domain.RentalCar
         /// <summary>
         /// 建構函式
         /// </summary>
-        public Car()
+        public Car(ModelType modelName)
         {
-            //_modelName = modelName;
+            _modelName = modelName;
         }
         
         /// <summary>

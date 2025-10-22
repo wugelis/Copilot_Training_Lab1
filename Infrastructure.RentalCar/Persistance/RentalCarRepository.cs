@@ -17,8 +17,8 @@ namespace Infrastructure.RentalCar.Persistance
             vehicles = new List<IVehicle>(
                 new IVehicle[]
                 {
-                    new Car() { Model = ModelType.Toyota, CC = "2000", CarModelName = "Camry LE" },
-                    new RV() { Model = ModelType.Ford, CC = "5000", CarModelName = "Mondel" }
+                    new Car(ModelType.Toyota) { CC = "2000", CarModelName = "Camry LE" },
+                    new RV(ModelType.Ford) { CC = "5000", CarModelName = "Mondel" }
                 });
         }
         public bool AddCar(IVehicle car)

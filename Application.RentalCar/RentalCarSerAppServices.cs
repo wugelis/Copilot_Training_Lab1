@@ -40,7 +40,7 @@ namespace Application.RentalCar
         /// <returns>是否成功租用</returns>
         public bool ToRentCar(IVehicle car)
         {
-            Car mycar = new Car() { CC = car.CC, Model = car.Model };
+            Car mycar = new Car(car.Model) { CC = car.CC };
 
             return _rentalCarRepository.AddCar(car);
         }
